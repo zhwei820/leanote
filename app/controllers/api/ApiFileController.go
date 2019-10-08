@@ -25,7 +25,7 @@ type ApiFile struct {
 
 /*
 // 协作时复制图片到owner
-func (c ApiFile) CopyImage(userId, fileId, toUserId string) revel.Result {
+func (c ApiFile) CopyImage(userId, fileId, toUserId string)  {
 	re := info.NewRe()
 
 	re.Ok, re.Id = fileService.CopyImage(userId, fileId, toUserId)
@@ -34,7 +34,7 @@ func (c ApiFile) CopyImage(userId, fileId, toUserId string) revel.Result {
 }
 
 // get all images by userId with page
-func (c ApiFile) GetImages(albumId, key string, page int) revel.Result {
+func (c ApiFile) GetImages(albumId, key string, page int)  {
 	imagesPage := fileService.ListImagesWithPage(c.getUserId(), albumId, key, page, 12)
 	re := info.NewRe()
 	re.Ok = true
@@ -42,13 +42,13 @@ func (c ApiFile) GetImages(albumId, key string, page int) revel.Result {
 	return c.RenderJSON(re)
 }
 
-func (c ApiFile) UpdateImageTitle(fileId, title string) revel.Result {
+func (c ApiFile) UpdateImageTitle(fileId, title string)  {
 	re := info.NewRe()
 	re.Ok = fileService.UpdateImageTitle(c.getUserId(), fileId, title)
 	return c.RenderJSON(re)
 }
 
-func (c ApiFile) DeleteImage(fileId string) revel.Result {
+func (c ApiFile) DeleteImage(fileId string)  {
 	re := info.NewRe()
 	re.Ok, re.Msg = fileService.DeleteImage(c.getUserId(), fileId)
 	return c.RenderJSON(re)
@@ -60,7 +60,7 @@ func (c ApiFile) DeleteImage(fileId string) revel.Result {
 
 // 输出image
 // [OK]
-func (c ApiFile) GetImage(fileId string) revel.Result {
+func (c ApiFile) GetImage(fileId string) {
 	path := fileService.GetFile(c.getUserId(), fileId) // 得到路径
 	if path == "" {
 		return c.RenderText("")
@@ -72,7 +72,7 @@ func (c ApiFile) GetImage(fileId string) revel.Result {
 
 // 下载附件
 // [OK]
-func (c ApiFile) GetAttach(fileId string) revel.Result {
+func (c ApiFile) GetAttach(fileId string) {
 	attach := attachService.GetAttach(fileId, c.getUserId()) // 得到路径
 	path := attach.Path
 	if path == "" {
@@ -85,7 +85,7 @@ func (c ApiFile) GetAttach(fileId string) revel.Result {
 
 // 下载所有附件
 // [OK]
-func (c ApiFile) GetAllAttachs(noteId string) revel.Result {
+func (c ApiFile) GetAllAttachs(noteId string) {
 	note := noteService.GetNoteById(noteId)
 	if note.NoteId == "" {
 		return c.RenderText("")

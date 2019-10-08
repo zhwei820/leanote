@@ -15,19 +15,19 @@ type AdminEmail struct {
 }
 
 // email配置
-func (c AdminEmail) Email() revel.Result {
+func (c AdminEmail) Email() {
 	return nil
 }
 
 // blog标签设置
-func (c AdminEmail) Blog() revel.Result {
+func (c AdminEmail) Blog() {
 	recommendTags := configService.GetGlobalArrayConfig("recommendTags")
 	newTags := configService.GetGlobalArrayConfig("newTags")
 	c.ViewArgs["recommendTags"] = strings.Join(recommendTags, ",")
 	c.ViewArgs["newTags"] = strings.Join(newTags, ",")
 	return c.RenderTemplate("admin/setting/blog.html")
 }
-func (c AdminEmail) DoBlogTag(recommendTags, newTags string) revel.Result {
+func (c AdminEmail) DoBlogTag(recommendTags, newTags string) {
 	re := info.NewRe()
 
 	re.Ok = configService.UpdateGlobalArrayConfig(c.GetUserId(), "recommendTags", strings.Split(recommendTags, ","))
@@ -38,12 +38,12 @@ func (c AdminEmail) DoBlogTag(recommendTags, newTags string) revel.Result {
 
 // demo
 // blog标签设置
-func (c AdminEmail) Demo() revel.Result {
+func (c AdminEmail) Demo() {
 	c.ViewArgs["demoUsername"] = configService.GetGlobalStringConfig("demoUsername")
 	c.ViewArgs["demoPassword"] = configService.GetGlobalStringConfig("demoPassword")
 	return c.RenderTemplate("admin/setting/demo.html")
 }
-func (c AdminEmail) DoDemo(demoUsername, demoPassword string) revel.Result {
+func (c AdminEmail) DoDemo(demoUsername, demoPassword string) {
 	re := info.NewRe()
 
 	userInfo, err := authService.Login(demoUsername, demoPassword)
@@ -64,17 +64,17 @@ func (c AdminEmail) DoDemo(demoUsername, demoPassword string) revel.Result {
 
 // ToImage
 // 长微博的bin路径phantomJs
-func (c AdminEmail) ToImage() revel.Result {
+func (c AdminEmail) ToImage() {
 	c.ViewArgs["toImageBinPath"] = configService.GetGlobalStringConfig("toImageBinPath")
 	return c.RenderTemplate("admin/setting/toImage.html")
 }
-func (c AdminEmail) DoToImage(toImageBinPath string) revel.Result {
+func (c AdminEmail) DoToImage(toImageBinPath string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "toImageBinPath", toImageBinPath)
 	return c.RenderJSON(re)
 }
 
-func (c AdminEmail) Set(emailHost, emailPort, emailUsername, emailPassword, emailSSL string) revel.Result {
+func (c AdminEmail) Set(emailHost, emailPort, emailUsername, emailPassword, emailSSL string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "emailHost", emailHost)
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "emailPort", emailPort)
@@ -84,7 +84,7 @@ func (c AdminEmail) Set(emailHost, emailPort, emailUsername, emailPassword, emai
 
 	return c.RenderJSON(re)
 }
-func (c AdminEmail) Template() revel.Result {
+func (c AdminEmail) Template() {
 	re := info.NewRe()
 
 	keys := []string{"emailTemplateHeader", "emailTemplateFooter",
@@ -120,7 +120,7 @@ func (c AdminEmail) Template() revel.Result {
 }
 
 // 发送Email
-func (c AdminEmail) SendEmailToEmails(sendEmails, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) revel.Result {
+func (c AdminEmail) SendEmailToEmails(sendEmails, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) {
 	re := info.NewRe()
 
 	c.updateConfig([]string{"sendEmails", "latestEmailSubject", "latestEmailBody"})
@@ -144,7 +144,7 @@ func (c AdminEmail) SendEmailToEmails(sendEmails, latestEmailSubject, latestEmai
 }
 
 // 发送Email
-func (c AdminEmail) SendToUsers2(emails, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) revel.Result {
+func (c AdminEmail) SendToUsers2(emails, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) {
 	re := info.NewRe()
 
 	c.updateConfig([]string{"sendEmails", "latestEmailSubject", "latestEmailBody"})
@@ -172,7 +172,7 @@ func (c AdminEmail) SendToUsers2(emails, latestEmailSubject, latestEmailBody str
 }
 
 // send Email dialog
-func (c AdminEmail) SendEmailDialog(emails string) revel.Result {
+func (c AdminEmail) SendEmailDialog(emails string) {
 	emailsArr := strings.Split(emails, ",")
 	emailsNl := strings.Join(emailsArr, "\n")
 
@@ -183,7 +183,7 @@ func (c AdminEmail) SendEmailDialog(emails string) revel.Result {
 	return c.RenderTemplate("admin/email/emailDialog.html")
 }
 
-func (c AdminEmail) SendToUsers(userFilterEmail, userFilterWhiteList, userFilterBlackList, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) revel.Result {
+func (c AdminEmail) SendToUsers(userFilterEmail, userFilterWhiteList, userFilterBlackList, latestEmailSubject, latestEmailBody string, verified, saveAsOldEmail bool) {
 	re := info.NewRe()
 
 	c.updateConfig([]string{"userFilterEmail", "userFilterWhiteList", "userFilterBlackList", "latestEmailSubject", "latestEmailBody"})
@@ -219,13 +219,13 @@ func (c AdminEmail) SendToUsers(userFilterEmail, userFilterWhiteList, userFilter
 }
 
 // 删除emails
-func (c AdminEmail) DeleteEmails(ids string) revel.Result {
+func (c AdminEmail) DeleteEmails(ids string) {
 	re := info.NewRe()
 	re.Ok = emailService.DeleteEmails(strings.Split(ids, ","))
 	return c.RenderJSON(re)
 }
 
-func (c AdminEmail) List(sorter, keywords string) revel.Result {
+func (c AdminEmail) List(sorter, keywords string) {
 	pageNumber := c.GetPage()
 	sorterField, isAsc := c.getSorter("CreatedTime", false, []string{"email", "ok", "subject", "createdTime"})
 	pageInfo, emails := emailService.ListEmailLogs(pageNumber, userPageSize, sorterField, isAsc, keywords)

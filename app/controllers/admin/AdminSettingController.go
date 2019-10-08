@@ -15,19 +15,19 @@ type AdminSetting struct {
 }
 
 // email配置
-func (c AdminSetting) Email() revel.Result {
+func (c AdminSetting) Email() {
 	return nil
 }
 
 // blog标签设置
-func (c AdminSetting) Blog() revel.Result {
+func (c AdminSetting) Blog() {
 	recommendTags := configService.GetGlobalArrayConfig("recommendTags")
 	newTags := configService.GetGlobalArrayConfig("newTags")
 	c.ViewArgs["recommendTags"] = strings.Join(recommendTags, ",")
 	c.ViewArgs["newTags"] = strings.Join(newTags, ",")
 	return c.RenderTemplate("admin/setting/blog.html")
 }
-func (c AdminSetting) DoBlogTag(recommendTags, newTags string) revel.Result {
+func (c AdminSetting) DoBlogTag(recommendTags, newTags string) {
 	re := info.NewRe()
 
 	re.Ok = configService.UpdateGlobalArrayConfig(c.GetUserId(), "recommendTags", strings.Split(recommendTags, ","))
@@ -39,7 +39,7 @@ func (c AdminSetting) DoBlogTag(recommendTags, newTags string) revel.Result {
 // 共享设置
 func (c AdminSetting) ShareNote(registerSharedUserId string,
 	registerSharedNotebookPerms, registerSharedNotePerms []int,
-	registerSharedNotebookIds, registerSharedNoteIds, registerCopyNoteIds []string) revel.Result {
+	registerSharedNotebookIds, registerSharedNoteIds, registerCopyNoteIds []string) {
 
 	re := info.NewRe()
 	re.Ok, re.Msg = configService.UpdateShareNoteConfig(registerSharedUserId, registerSharedNotebookPerms, registerSharedNotePerms, registerSharedNotebookIds, registerSharedNoteIds, registerCopyNoteIds)
@@ -48,12 +48,12 @@ func (c AdminSetting) ShareNote(registerSharedUserId string,
 
 // demo
 // blog标签设置
-func (c AdminSetting) Demo() revel.Result {
+func (c AdminSetting) Demo() {
 	c.ViewArgs["demoUsername"] = configService.GetGlobalStringConfig("demoUsername")
 	c.ViewArgs["demoPassword"] = configService.GetGlobalStringConfig("demoPassword")
 	return c.RenderTemplate("admin/setting/demo.html")
 }
-func (c AdminSetting) DoDemo(demoUsername, demoPassword string) revel.Result {
+func (c AdminSetting) DoDemo(demoUsername, demoPassword string) {
 	re := info.NewRe()
 
 	userInfo, err := authService.Login(demoUsername, demoPassword)
@@ -73,20 +73,20 @@ func (c AdminSetting) DoDemo(demoUsername, demoPassword string) revel.Result {
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) ExportPdf(path string) revel.Result {
+func (c AdminSetting) ExportPdf(path string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "exportPdfBinPath", path)
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) DoSiteUrl(siteUrl string) revel.Result {
+func (c AdminSetting) DoSiteUrl(siteUrl string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "siteUrl", siteUrl)
 	return c.RenderJSON(re)
 }
 
 // SubDomain
-func (c AdminSetting) SubDomain() revel.Result {
+func (c AdminSetting) SubDomain() {
 	c.ViewArgs["str"] = configService.GlobalStringConfigs
 	c.ViewArgs["arr"] = configService.GlobalArrayConfigs
 
@@ -96,7 +96,7 @@ func (c AdminSetting) SubDomain() revel.Result {
 
 	return c.RenderTemplate("admin/setting/subDomain.html")
 }
-func (c AdminSetting) DoSubDomain(noteSubDomain, blogSubDomain, leaSubDomain, blackSubDomains, allowCustomDomain, blackCustomDomains string) revel.Result {
+func (c AdminSetting) DoSubDomain(noteSubDomain, blogSubDomain, leaSubDomain, blackSubDomains, allowCustomDomain, blackCustomDomains string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "noteSubDomain", noteSubDomain)
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "blogSubDomain", blogSubDomain)
@@ -109,13 +109,13 @@ func (c AdminSetting) DoSubDomain(noteSubDomain, blogSubDomain, leaSubDomain, bl
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) OpenRegister(openRegister string) revel.Result {
+func (c AdminSetting) OpenRegister(openRegister string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "openRegister", openRegister)
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) HomePage(homePage string) revel.Result {
+func (c AdminSetting) HomePage(homePage string) {
 	re := info.NewRe()
 	if homePage == "0" {
 		homePage = ""
@@ -124,7 +124,7 @@ func (c AdminSetting) HomePage(homePage string) revel.Result {
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) Mongodb(mongodumpPath, mongorestorePath string) revel.Result {
+func (c AdminSetting) Mongodb(mongodumpPath, mongorestorePath string) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "mongodumpPath", mongodumpPath)
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "mongorestorePath", mongorestorePath)
@@ -132,7 +132,7 @@ func (c AdminSetting) Mongodb(mongodumpPath, mongorestorePath string) revel.Resu
 	return c.RenderJSON(re)
 }
 
-func (c AdminSetting) UploadSize(uploadImageSize, uploadAvatarSize, uploadBlogLogoSize, uploadAttachSize float64) revel.Result {
+func (c AdminSetting) UploadSize(uploadImageSize, uploadAvatarSize, uploadBlogLogoSize, uploadAttachSize float64) {
 	re := info.NewRe()
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "uploadImageSize", fmt.Sprintf("%v", uploadImageSize))
 	re.Ok = configService.UpdateGlobalStringConfig(c.GetUserId(), "uploadAvatarSize", fmt.Sprintf("%v", uploadAvatarSize))

@@ -12,7 +12,7 @@ type Index struct {
 	BaseController
 }
 
-func (c Index) Default() revel.Result {
+func (c Index) Default() {
 	if configService.HomePageIsAdminsBlog() {
 		blog := Blog{c.BaseController}
 		return blog.Index(configService.GetAdminUsername())
@@ -21,7 +21,7 @@ func (c Index) Default() revel.Result {
 }
 
 // leanote展示页, 没有登录的, 或已登录明确要进该页的
-func (c Index) Index() revel.Result {
+func (c Index) Index() {
 	c.SetUserInfo()
 	c.ViewArgs["title"] = "leanote"
 	c.ViewArgs["openRegister"] = configService.GlobalStringConfigs["openRegister"]
@@ -31,7 +31,7 @@ func (c Index) Index() revel.Result {
 }
 
 // 建议
-func (c Index) Suggestion(addr, suggestion string) revel.Result {
+func (c Index) Suggestion(addr, suggestion string) {
 	re := info.NewRe()
 	re.Ok = suggestionService.AddSuggestion(info.Suggestion{Addr: addr, UserId: c.GetObjectUserId(), Suggestion: suggestion})
 

@@ -69,7 +69,7 @@ func (c MemberBlog) getSorter(sorterField string, isAsc bool, okSorter []string)
 // 博客列表
 var userPageSize = 15
 
-func (c MemberBlog) Index(sorter, keywords string) revel.Result {
+func (c MemberBlog) Index(sorter, keywords string) {
 	userId := c.GetUserId()
 	userInfo := userService.GetUserInfo(userId)
 	c.ViewArgs["userInfo"] = userInfo
@@ -91,14 +91,14 @@ func (c MemberBlog) Index(sorter, keywords string) revel.Result {
 }
 
 // 修改笔记的urlTitle
-func (c MemberBlog) UpdateBlogUrlTitle(noteId, urlTitle string) revel.Result {
+func (c MemberBlog) UpdateBlogUrlTitle(noteId, urlTitle string) {
 	re := info.NewRe()
 	re.Ok, re.Item = blogService.UpateBlogUrlTitle(c.GetUserId(), noteId, urlTitle)
 	return c.RenderJSON(re)
 }
 
 // 修改笔记的urlTitle
-func (c MemberBlog) UpdateBlogAbstract(noteId string) revel.Result {
+func (c MemberBlog) UpdateBlogAbstract(noteId string) {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Update Post Abstract")
 	note := noteService.GetNoteAndContent(noteId, c.GetUserId())
@@ -109,31 +109,31 @@ func (c MemberBlog) UpdateBlogAbstract(noteId string) revel.Result {
 	c.ViewArgs["noteId"] = noteId
 	return c.RenderTemplate("member/blog/update_abstract.html")
 }
-func (c MemberBlog) DoUpdateBlogAbstract(noteId, imgSrc, desc, abstract string) revel.Result {
+func (c MemberBlog) DoUpdateBlogAbstract(noteId, imgSrc, desc, abstract string) {
 	re := info.NewRe()
 	re.Ok = blogService.UpateBlogAbstract(c.GetUserId(), noteId, imgSrc, desc, abstract)
 	return c.RenderJSON(re)
 }
 
 // 基本信息设置
-func (c MemberBlog) Base() revel.Result {
+func (c MemberBlog) Base() {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Blog Base Info")
 	return c.RenderTemplate("member/blog/base.html")
 }
-func (c MemberBlog) Comment() revel.Result {
+func (c MemberBlog) Comment() {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Comment")
 	return c.RenderTemplate("member/blog/comment.html")
 }
 
-func (c MemberBlog) Paging() revel.Result {
+func (c MemberBlog) Paging() {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Paging")
 	return c.RenderTemplate("member/blog/paging.html")
 }
 
-func (c MemberBlog) Cate() revel.Result {
+func (c MemberBlog) Cate() {
 	userBlog := c.common()
 	c.ViewArgs["title"] = c.Message("Category")
 
@@ -172,25 +172,25 @@ func (c MemberBlog) Cate() revel.Result {
 }
 
 // 修改分类排序
-func (c MemberBlog) UpateCateIds(cateIds []string) revel.Result {
+func (c MemberBlog) UpateCateIds(cateIds []string) {
 	re := info.NewRe()
 	re.Ok = blogService.UpateCateIds(c.GetUserId(), cateIds)
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) UpdateCateUrlTitle(cateId, urlTitle string) revel.Result {
+func (c MemberBlog) UpdateCateUrlTitle(cateId, urlTitle string) {
 	re := info.NewRe()
 	re.Ok, re.Item = blogService.UpateCateUrlTitle(c.GetUserId(), cateId, urlTitle)
 	return c.RenderJSON(re)
 }
 
 // 保存之, 包含增加与保存
-func (c MemberBlog) DoAddOrUpdateSingle(singleId, title, content string) revel.Result {
+func (c MemberBlog) DoAddOrUpdateSingle(singleId, title, content string) {
 	re := info.NewRe()
 	re.Ok = blogService.AddOrUpdateSingle(c.GetUserId(), singleId, title, content)
 	return c.RenderJSON(re)
 }
-func (c MemberBlog) AddOrUpdateSingle(singleId string) revel.Result {
+func (c MemberBlog) AddOrUpdateSingle(singleId string) {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Add Single")
 	c.ViewArgs["singleId"] = singleId
@@ -200,26 +200,26 @@ func (c MemberBlog) AddOrUpdateSingle(singleId string) revel.Result {
 	}
 	return c.RenderTemplate("member/blog/add_single.html")
 }
-func (c MemberBlog) SortSingles(singleIds []string) revel.Result {
+func (c MemberBlog) SortSingles(singleIds []string) {
 	re := info.NewRe()
 	re.Ok = blogService.SortSingles(c.GetUserId(), singleIds)
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) DeleteSingle(singleId string) revel.Result {
+func (c MemberBlog) DeleteSingle(singleId string) {
 	re := info.NewRe()
 	re.Ok = blogService.DeleteSingle(c.GetUserId(), singleId)
 	return c.RenderJSON(re)
 }
 
 // 修改页面标题
-func (c MemberBlog) UpdateSingleUrlTitle(singleId, urlTitle string) revel.Result {
+func (c MemberBlog) UpdateSingleUrlTitle(singleId, urlTitle string) {
 	re := info.NewRe()
 	re.Ok, re.Item = blogService.UpdateSingleUrlTitle(c.GetUserId(), singleId, urlTitle)
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) Single() revel.Result {
+func (c MemberBlog) Single() {
 	c.common()
 	c.ViewArgs["title"] = c.Message("Single")
 	c.ViewArgs["singles"] = blogService.GetSingles(c.GetUserId())
@@ -228,7 +228,7 @@ func (c MemberBlog) Single() revel.Result {
 }
 
 // 主题
-func (c MemberBlog) Theme() revel.Result {
+func (c MemberBlog) Theme() {
 	c.common()
 	activeTheme, otherThemes := themeService.GetUserThemes(c.GetUserId())
 	c.ViewArgs["activeTheme"] = activeTheme
@@ -243,7 +243,7 @@ func (c MemberBlog) Theme() revel.Result {
 // 编辑主题
 var baseTpls = []string{"header.html", "footer.html", "index.html", "cate.html", "search.html", "post.html", "single.html", "tags.html", "tag_posts.html", "archive.html", "share_comment.html", "404.html", "theme.json", "style.css", "blog.js"}
 
-func (c MemberBlog) UpdateTheme(themeId string, isNew int) revel.Result {
+func (c MemberBlog) UpdateTheme(themeId string, isNew int) {
 	// 查看用户是否有该theme, 若没有则复制default之
 	// 得到主题的文件列表
 	userBlog := blogService.GetUserBlog(c.GetUserId())
@@ -293,26 +293,26 @@ func (c MemberBlog) UpdateTheme(themeId string, isNew int) revel.Result {
 }
 
 // 得到文件内容
-func (c MemberBlog) GetTplContent(themeId string, filename string) revel.Result {
+func (c MemberBlog) GetTplContent(themeId string, filename string) {
 	re := info.NewRe()
 	re.Ok = true
 	re.Item = themeService.GetTplContent(c.GetUserId(), themeId, filename)
 
 	return c.RenderJSON(re)
 }
-func (c MemberBlog) UpdateTplContent(themeId, filename, content string) revel.Result {
+func (c MemberBlog) UpdateTplContent(themeId, filename, content string) {
 	re := info.NewRe()
 	re.Ok, re.Msg = themeService.UpdateTplContent(c.GetUserId(), themeId, filename, content)
 	return c.RenderRe(re)
 }
 
-func (c MemberBlog) DeleteTpl(themeId, filename string) revel.Result {
+func (c MemberBlog) DeleteTpl(themeId, filename string) {
 	re := info.NewRe()
 	re.Ok = themeService.DeleteTpl(c.GetUserId(), themeId, filename)
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) ListThemeImages(themeId string) revel.Result {
+func (c MemberBlog) ListThemeImages(themeId string) {
 	re := info.NewRe()
 	userId := c.GetUserId()
 	path := themeService.GetThemeAbsolutePath(userId, themeId) + "/images"
@@ -323,7 +323,7 @@ func (c MemberBlog) ListThemeImages(themeId string) revel.Result {
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) DeleteThemeImage(themeId, filename string) revel.Result {
+func (c MemberBlog) DeleteThemeImage(themeId, filename string) {
 	re := info.NewRe()
 	path := themeService.GetThemeAbsolutePath(c.GetUserId(), themeId) + "/images/" + filename
 	re.Ok = DeleteFile(path)
@@ -331,7 +331,7 @@ func (c MemberBlog) DeleteThemeImage(themeId, filename string) revel.Result {
 }
 
 // 上传主题图片
-func (c MemberBlog) UploadThemeImage(themeId string) revel.Result {
+func (c MemberBlog) UploadThemeImage(themeId string) {
 	re := c.uploadImage(themeId)
 	c.ViewArgs["fileUrlPath"] = re.Id
 	c.ViewArgs["resultCode"] = re.Code
@@ -409,28 +409,28 @@ func (c MemberBlog) uploadImage(themeId string) (re info.Re) {
 
 //
 // 使用主题
-func (c MemberBlog) ActiveTheme(themeId string) revel.Result {
+func (c MemberBlog) ActiveTheme(themeId string) {
 	re := info.NewRe()
 	re.Ok = themeService.ActiveTheme(c.GetUserId(), themeId)
 	return c.RenderJSON(re)
 }
 
 // 删除主题
-func (c MemberBlog) DeleteTheme(themeId string) revel.Result {
+func (c MemberBlog) DeleteTheme(themeId string) {
 	re := info.NewRe()
 	re.Ok = themeService.DeleteTheme(c.GetUserId(), themeId)
 	return c.RenderJSON(re)
 }
 
 // 管理员公开主题
-func (c MemberBlog) PublicTheme(themeId string) revel.Result {
+func (c MemberBlog) PublicTheme(themeId string) {
 	re := info.NewRe()
 	re.Ok = themeService.PublicTheme(c.GetUserId(), themeId)
 	return c.RenderJSON(re)
 }
 
 // 导出
-func (c MemberBlog) ExportTheme(themeId string) revel.Result {
+func (c MemberBlog) ExportTheme(themeId string) {
 	re := info.NewRe()
 	var path string
 	re.Ok, path = themeService.ExportTheme(c.GetUserId(), themeId)
@@ -445,7 +445,7 @@ func (c MemberBlog) ExportTheme(themeId string) revel.Result {
 }
 
 // 导入主题
-func (c MemberBlog) ImportTheme() revel.Result {
+func (c MemberBlog) ImportTheme() {
 	re := info.NewRe()
 
 	var data []byte
@@ -505,37 +505,37 @@ func (c MemberBlog) ImportTheme() revel.Result {
 }
 
 // 安装
-func (c MemberBlog) InstallTheme(themeId string) revel.Result {
+func (c MemberBlog) InstallTheme(themeId string) {
 	re := info.NewRe()
 	re.Ok = themeService.InstallTheme(c.GetUserId(), themeId)
 	return c.RenderJSON(re)
 }
 
 // 新建主题
-func (c MemberBlog) NewTheme() revel.Result {
+func (c MemberBlog) NewTheme() {
 	_, themeId := themeService.NewTheme(c.GetUserId())
 	return c.Redirect("/member/blog/updateTheme?isNew=1&themeId=" + themeId)
 }
 
 //-----------
 //
-func (c MemberBlog) SetUserBlogBase(userBlog info.UserBlogBase) revel.Result {
+func (c MemberBlog) SetUserBlogBase(userBlog info.UserBlogBase) {
 	re := info.NewRe()
 	re.Ok = blogService.UpdateUserBlogBase(c.GetUserId(), userBlog)
 	return c.RenderJSON(re)
 }
-func (c MemberBlog) SetUserBlogComment(userBlog info.UserBlogComment) revel.Result {
+func (c MemberBlog) SetUserBlogComment(userBlog info.UserBlogComment) {
 	re := info.NewRe()
 	re.Ok = blogService.UpdateUserBlogComment(c.GetUserId(), userBlog)
 	return c.RenderJSON(re)
 }
-func (c MemberBlog) SetUserBlogStyle(userBlog info.UserBlogStyle) revel.Result {
+func (c MemberBlog) SetUserBlogStyle(userBlog info.UserBlogStyle) {
 	re := info.NewRe()
 	re.Ok = blogService.UpdateUserBlogStyle(c.GetUserId(), userBlog)
 	return c.RenderJSON(re)
 }
 
-func (c MemberBlog) SetUserBlogPaging(perPageSize int, sortField string, isAsc bool) revel.Result {
+func (c MemberBlog) SetUserBlogPaging(perPageSize int, sortField string, isAsc bool) {
 	re := info.NewRe()
 	re.Ok, re.Msg = blogService.UpdateUserBlogPaging(c.GetUserId(), perPageSize, sortField, isAsc)
 	return c.RenderRe(re)

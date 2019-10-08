@@ -21,7 +21,7 @@ type File struct {
 
 // 上传的是博客logo
 // TODO logo不要设置权限, 另外的目录
-func (c File) UploadBlogLogo() revel.Result {
+func (c File) UploadBlogLogo() {
 	re := c.uploadImage("blogLogo", "")
 
 	c.ViewArgs["fileUrlPath"] = re.Id
@@ -33,7 +33,7 @@ func (c File) UploadBlogLogo() revel.Result {
 
 // 拖拉上传, pasteImage
 // noteId 是为了判断是否是协作的note, 如果是则需要复制一份到note owner中
-func (c File) PasteImage(noteId string) revel.Result {
+func (c File) PasteImage(noteId string) {
 	re := c.uploadImage("pasteImage", "")
 
 	if noteId != "" {
@@ -58,7 +58,7 @@ func (c File) PasteImage(noteId string) revel.Result {
 }
 
 // 头像设置
-func (c File) UploadAvatar() revel.Result {
+func (c File) UploadAvatar() {
 	re := c.uploadImage("logo", "")
 
 	c.ViewArgs["fileUrlPath"] = re.Id
@@ -76,7 +76,7 @@ func (c File) UploadAvatar() revel.Result {
 }
 
 // leaui image plugin upload image
-func (c File) UploadImageLeaui(albumId string) revel.Result {
+func (c File) UploadImageLeaui(albumId string) {
 	re := c.uploadImage("", albumId)
 	return c.RenderJSON(re)
 }
@@ -117,7 +117,6 @@ func (c File) uploadImage(from, albumId string) (re info.Re) {
 	// defer file.Close()
 
 	// data, err := ioutil.ReadAll(file)
-	
 
 	// 生成上传路径
 	newGuid := NewGuid()
@@ -215,18 +214,18 @@ func (c File) uploadImage(from, albumId string) (re info.Re) {
 }
 
 // get all images by userId with page
-func (c File) GetImages(albumId, key string, page int) revel.Result {
+func (c File) GetImages(albumId, key string, page int) {
 	re := fileService.ListImagesWithPage(c.GetUserId(), albumId, key, page, 12)
 	return c.RenderJSON(re)
 }
 
-func (c File) UpdateImageTitle(fileId, title string) revel.Result {
+func (c File) UpdateImageTitle(fileId, title string) {
 	re := info.NewRe()
 	re.Ok = fileService.UpdateImageTitle(c.GetUserId(), fileId, title)
 	return c.RenderJSON(re)
 }
 
-func (c File) DeleteImage(fileId string) revel.Result {
+func (c File) DeleteImage(fileId string) {
 	re := info.NewRe()
 	re.Ok, re.Msg = fileService.DeleteImage(c.GetUserId(), fileId)
 	return c.RenderJSON(re)
@@ -236,7 +235,7 @@ func (c File) DeleteImage(fileId string) revel.Result {
 
 // 输出image
 // 权限判断
-func (c File) OutputImage(noteId, fileId string) revel.Result {
+func (c File) OutputImage(noteId, fileId string) {
 	path := fileService.GetFile(c.GetUserId(), fileId) // 得到路径
 	if path == "" {
 		return c.RenderText("")
@@ -248,7 +247,7 @@ func (c File) OutputImage(noteId, fileId string) revel.Result {
 
 // 协作时复制图片到owner
 // 需要计算对方大小
-func (c File) CopyImage(userId, fileId, toUserId string) revel.Result {
+func (c File) CopyImage(userId, fileId, toUserId string) {
 	re := info.NewRe()
 	re.Ok, re.Id = fileService.CopyImage(userId, fileId, toUserId)
 	return c.RenderJSON(re)
@@ -256,7 +255,7 @@ func (c File) CopyImage(userId, fileId, toUserId string) revel.Result {
 
 // 复制外网的图片
 // 都要好好的计算大小
-func (c File) CopyHttpImage(src string) revel.Result {
+func (c File) CopyHttpImage(src string) {
 	re := info.NewRe()
 
 	// 生成上传路径

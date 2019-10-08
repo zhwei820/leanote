@@ -11,7 +11,7 @@ type MemberIndex struct {
 }
 
 // admin 主页
-func (c MemberIndex) Index() revel.Result {
+func (c MemberIndex) Index() {
 	c.SetUserInfo()
 	c.ViewArgs["title"] = c.Message("Leanote Member Center")
 
@@ -24,7 +24,7 @@ func (c MemberIndex) Index() revel.Result {
 }
 
 // 模板
-func (c MemberIndex) T(t string) revel.Result {
+func (c MemberIndex) T(t string) {
 	c.ViewArgs["str"] = configService.GlobalStringConfigs
 	c.ViewArgs["arr"] = configService.GlobalArrayConfigs
 	c.ViewArgs["map"] = configService.GlobalMapConfigs
@@ -32,6 +32,6 @@ func (c MemberIndex) T(t string) revel.Result {
 	return c.RenderTemplate("admin/" + t + ".html")
 }
 
-func (c MemberIndex) GetView(view string) revel.Result {
+func (c MemberIndex) GetView(view string) {
 	return c.RenderTemplate("admin/" + view)
 }

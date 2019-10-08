@@ -14,7 +14,7 @@ import (
 // not need the struct name as prefix,
 // eg:
 // type Note struct {Name}
-// func (c Controller) List(note Note) revel.Result {}
+// func (c Controller) List(note Note)  {}
 // in revel you must pass the note.Name as key, now you just pass Name
 
 // for test

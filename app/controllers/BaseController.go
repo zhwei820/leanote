@@ -1,15 +1,14 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/frame/gmvc"
 	"github.com/leanote/leanote/app/info"
 	"github.com/leanote/leanote/app/lea/i18n"
 	"github.com/revel/revel"
 	"gopkg.in/mgo.v2/bson"
-	//	. "github.com/leanote/leanote/app/lea"
-	//	"io/ioutil"
-	//	"fmt"
-	"bytes"
 	"math"
 	"strconv"
 	"strings"
@@ -17,16 +16,18 @@ import (
 
 // 公用Controller, 其它Controller继承它
 type BaseController struct {
-	*revel.Controller
+	//*revel.Controller
+	*gmvc.Controller
+	ViewArgs g.Map
 }
 
 // 覆盖revel.Message
 func (c *BaseController) Message(message string, args ...interface{}) (value string) {
-	return i18n.Message(c.Request.Locale, message, args...)
+	return i18n.Message(c.Request.Cookie.Get("LEANOTE_LANG"), message, args...)
 }
 
 func (c BaseController) GetUserId() string {
-	if userId, ok := c.Session["UserId"]; ok {
+	if userId := c.Session.GetString("UserId"); userId != "" {
 		return userId
 	}
 	return ""
@@ -63,29 +64,7 @@ func (c BaseController) GetUsername() string {
 func (c BaseController) GetUserInfo() info.User {
 	if userId, ok := c.Session["UserId"]; ok && userId != "" {
 		return userService.GetUserInfo(userId)
-		/*
-			notebookWidth, _ := strconv.Atoi(c.Session["NotebookWidth"])
-			noteListWidth, _ := strconv.Atoi(c.Session["NoteListWidth"])
-			mdEditorWidth, _ := strconv.Atoi(c.Session["MdEditorWidth"])
-			LogJ(c.Session)
-			user := info.User{UserId: bson.ObjectIdHex(userId),
-				Email: c.Session["Email"],
-				Logo: c.Session["Logo"],
-				Username: c.Session["Username"],
-				UsernameRaw: c.Session["UsernameRaw"],
-				Theme: c.Session["Theme"],
-				NotebookWidth: notebookWidth,
-				NoteListWidth: noteListWidth,
-				MdEditorWidth: mdEditorWidth,
-				}
-			if c.Session["Verified"] == "1" {
-				user.Verified = true
-			}
-			if c.Session["LeftIsMin"] == "1" {
-				user.LeftIsMin = true
-			}
-			return user
-		*/
+
 	}
 	return info.User{}
 }
@@ -103,7 +82,7 @@ func (c BaseController) GetSession(key string) string {
 	if !ok {
 		v = ""
 	}
-	return v
+	return v.(string)
 }
 func (c BaseController) SetSession(userInfo info.User) {
 	if userInfo.UserId.Hex() != "" {
@@ -153,7 +132,7 @@ func (c BaseController) Json(i interface{}) string {
 // 得到第几页
 func (c BaseController) GetPage() int {
 	page := 0
-	c.Params.Bind(&page, "page")
+	c.Request.GetQuery("page", 0)
 	if page == 0 {
 		return 1
 	}
@@ -179,7 +158,7 @@ func (c BaseController) GetTotalPage(page, count int) int {
 }
 
 //-------------
-func (c BaseController) E404() revel.Result {
+func (c BaseController) E404() {
 	c.ViewArgs["title"] = "404"
 	return c.NotFound("", nil)
 }
@@ -187,14 +166,7 @@ func (c BaseController) E404() revel.Result {
 // 设置本地
 func (c BaseController) SetLocale() string {
 	locale := string(c.Request.Locale) // zh-CN
-	// lang := locale
-	// if strings.Contains(locale, "-") {
-	// 	pos := strings.Index(locale, "-")
-	// 	lang = locale[0:pos]
-	// }
-	// if lang != "zh" && lang != "en" {
-	// 	lang = "en"
-	// }
+
 	lang := locale
 	if !i18n.HasLang(locale) {
 		lang = i18n.GetDefaultLang()
@@ -229,19 +201,19 @@ func (c BaseController) RenderTemplateStr(templatePath string) string {
 	}
 
 	tpl := &revel.RenderTemplateResult{
-		Template:   template,
+		Template: template,
 		ViewArgs: c.ViewArgs, // 把args给它
 	}
 
 	var buffer bytes.Buffer
-	tpl.Template.Render(&buffer, c.ViewArgs)
+	_ = tpl.Template.Render(&buffer, c.ViewArgs)
 	return buffer.String()
 }
 
 // json, result
 // 为了msg
 // msg-v1-v2-v3
-func (c BaseController) RenderRe(re info.Re) revel.Result {
+func (c BaseController) RenderRe(re info.Re) {
 	oldMsg := re.Msg
 	if re.Msg != "" {
 		if strings.Contains(re.Msg, "-") {

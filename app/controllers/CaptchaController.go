@@ -13,8 +13,8 @@ import (
 	//	"os"
 	//	"path"
 	//	"strconv"
-	"net/http"
 	"io"
+	"net/http"
 )
 
 // 验证码服务
@@ -28,7 +28,7 @@ func (r Ca) Apply(req *revel.Request, resp *revel.Response) {
 	resp.WriteHeader(http.StatusOK, "image/png")
 }
 
-func (c Captcha) Get() revel.Result {
+func (c Captcha) Get() {
 	c.Response.ContentType = "image/png"
 	image, str := captcha.Fetch()
 	out := io.Writer(c.Response.GetWriter())

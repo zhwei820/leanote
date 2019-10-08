@@ -69,7 +69,7 @@ func needValidate(controller, method string) bool {
 }
 
 // 这里得到token, 若不是login, logout等公用操作, 必须验证是否已登录
-func AuthInterceptor(c *revel.Controller) revel.Result {
+func AuthInterceptor(c *revel.Controller) {
 	// 得到token /api/user/info?userId=xxx&token=xxxxx
 	token := c.Params.Values.Get("token")
 	noToken := false

@@ -10,28 +10,28 @@ type MemberUser struct {
 	MemberBaseController
 }
 
-func (c MemberUser) Username() revel.Result {
+func (c MemberUser) Username() {
 	c.SetUserInfo()
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("Username")
 	return c.RenderTemplate("member/user/username.html")
 }
 
-func (c MemberUser) Email() revel.Result {
+func (c MemberUser) Email() {
 	c.SetUserInfo()
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("Email")
 	return c.RenderTemplate("member/user/email.html")
 }
 
-func (c MemberUser) Password() revel.Result {
+func (c MemberUser) Password() {
 	c.SetUserInfo()
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("Password")
 	return c.RenderTemplate("member/user/password.html")
 }
 
-func (c MemberUser) Avatar() revel.Result {
+func (c MemberUser) Avatar() {
 	c.SetUserInfo()
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("Avatar")

@@ -9,9 +9,9 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"strings"
 	"time"
-	"runtime"
 	//	"github.com/leanote/leanote/app/types"
 	//	"io/ioutil"
 	"fmt"
@@ -26,7 +26,7 @@ type Note struct {
 // 笔记首页, 判断是否已登录
 // 已登录, 得到用户基本信息(notebook, shareNotebook), 跳转到index.html中
 // 否则, 转向登录页面
-func (c Note) Index(noteId, online string) revel.Result {
+func (c Note) Index(noteId, online string) {
 	c.SetLocale()
 	userInfo := c.GetUserAndBlogUrl()
 
@@ -141,23 +141,23 @@ func (c Note) Index(noteId, online string) revel.Result {
 // 首页, 判断是否已登录
 // 已登录, 得到用户基本信息(notebook, shareNotebook), 跳转到index.html中
 // 否则, 转向登录页面
-func (c Note) ListNotes(notebookId string) revel.Result {
+func (c Note) ListNotes(notebookId string) {
 	_, notes := noteService.ListNotes(c.GetUserId(), notebookId, false, c.GetPage(), pageSize, defaultSortField, false, false)
 	return c.RenderJSON(notes)
 }
 
 // 得到trash
-func (c Note) ListTrashNotes() revel.Result {
+func (c Note) ListTrashNotes() {
 	_, notes := noteService.ListNotes(c.GetUserId(), "", true, c.GetPage(), pageSize, defaultSortField, false, false)
 	return c.RenderJSON(notes)
 }
 
 // 得到note和内容
-func (c Note) GetNoteAndContent(noteId string) revel.Result {
+func (c Note) GetNoteAndContent(noteId string) {
 	return c.RenderJSON(noteService.GetNoteAndContent(noteId, c.GetUserId()))
 }
 
-func (c Note) GetNoteAndContentBySrc(src string) revel.Result {
+func (c Note) GetNoteAndContentBySrc(src string) {
 	noteId, noteAndContent := noteService.GetNoteAndContentBySrc(src, c.GetUserId())
 	ret := info.Re{}
 	if noteId != "" {
@@ -168,13 +168,13 @@ func (c Note) GetNoteAndContentBySrc(src string) revel.Result {
 }
 
 // 得到内容
-func (c Note) GetNoteContent(noteId string) revel.Result {
+func (c Note) GetNoteContent(noteId string) {
 	noteContent := noteService.GetNoteContent(noteId, c.GetUserId())
 	return c.RenderJSON(noteContent)
 }
 
 // 这里不能用json, 要用post
-func (c Note) UpdateNoteOrContent(noteOrContent info.NoteOrContent) revel.Result {
+func (c Note) UpdateNoteOrContent(noteOrContent info.NoteOrContent) {
 	// 新添加note
 	if noteOrContent.IsNew {
 		userId := c.GetObjectUserId()
@@ -188,7 +188,7 @@ func (c Note) UpdateNoteOrContent(noteOrContent info.NoteOrContent) revel.Result
 			NoteId:     bson.ObjectIdHex(noteOrContent.NoteId),
 			NotebookId: bson.ObjectIdHex(noteOrContent.NotebookId),
 			Title:      noteOrContent.Title,
-			Src: noteOrContent.Src, // 来源
+			Src:        noteOrContent.Src, // 来源
 			Tags:       strings.Split(noteOrContent.Tags, ","),
 			Desc:       noteOrContent.Desc,
 			ImgSrc:     noteOrContent.ImgSrc,
@@ -240,7 +240,7 @@ func (c Note) UpdateNoteOrContent(noteOrContent info.NoteOrContent) revel.Result
 	if c.Has("Content") {
 		//		noteService.UpdateNoteContent(noteOrContent.UserId, c.GetUserId(),
 		//			noteOrContent.NoteId, noteOrContent.Content, noteOrContent.Abstract)
-		// contentOk, contentMsg, afterContentUsn = 
+		// contentOk, contentMsg, afterContentUsn =
 		noteService.UpdateNoteContent(c.GetUserId(),
 			noteOrContent.NoteId, noteOrContent.Content, noteOrContent.Abstract,
 			needUpdateNote, -1, time.Now())
@@ -255,7 +255,7 @@ func (c Note) UpdateNoteOrContent(noteOrContent info.NoteOrContent) revel.Result
 
 // 删除note/ 删除别人共享给我的笔记
 // userId 是note.UserId
-func (c Note) DeleteNote(noteIds []string, isShared bool) revel.Result {
+func (c Note) DeleteNote(noteIds []string, isShared bool) {
 	if !isShared {
 		for _, noteId := range noteIds {
 			trashService.DeleteNote(noteId, c.GetUserId())
@@ -271,12 +271,12 @@ func (c Note) DeleteNote(noteIds []string, isShared bool) revel.Result {
 }
 
 // 删除trash, 已弃用, 用DeleteNote
-func (c Note) DeleteTrash(noteId string) revel.Result {
+func (c Note) DeleteTrash(noteId string) {
 	return c.RenderJSON(trashService.DeleteTrash(noteId, c.GetUserId()))
 }
 
 // 移动note
-func (c Note) MoveNote(noteIds []string, notebookId string) revel.Result {
+func (c Note) MoveNote(noteIds []string, notebookId string) {
 	userId := c.GetUserId()
 	for _, noteId := range noteIds {
 		noteService.MoveNote(noteId, notebookId, userId)
@@ -285,7 +285,7 @@ func (c Note) MoveNote(noteIds []string, notebookId string) revel.Result {
 }
 
 // 复制note
-func (c Note) CopyNote(noteIds []string, notebookId string) revel.Result {
+func (c Note) CopyNote(noteIds []string, notebookId string) {
 	copyNotes := make([]info.Note, len(noteIds))
 	userId := c.GetUserId()
 	for i, noteId := range noteIds {
@@ -298,7 +298,7 @@ func (c Note) CopyNote(noteIds []string, notebookId string) revel.Result {
 }
 
 // 复制别人共享的笔记给我
-func (c Note) CopySharedNote(noteIds []string, notebookId, fromUserId string) revel.Result {
+func (c Note) CopySharedNote(noteIds []string, notebookId, fromUserId string) {
 	copyNotes := make([]info.Note, len(noteIds))
 	userId := c.GetUserId()
 	for i, noteId := range noteIds {
@@ -313,19 +313,19 @@ func (c Note) CopySharedNote(noteIds []string, notebookId, fromUserId string) re
 //------------
 // search
 // 通过title搜索
-func (c Note) SearchNote(key string) revel.Result {
+func (c Note) SearchNote(key string) {
 	_, blogs := noteService.SearchNote(key, c.GetUserId(), c.GetPage(), pageSize, "UpdatedTime", false, false)
 	return c.RenderJSON(blogs)
 }
 
 // 通过tags搜索
-func (c Note) SearchNoteByTags(tags []string) revel.Result {
+func (c Note) SearchNoteByTags(tags []string) {
 	_, blogs := noteService.SearchNoteByTags(tags, c.GetUserId(), c.GetPage(), pageSize, "UpdatedTime", false)
 	return c.RenderJSON(blogs)
 }
 
 // 生成PDF
-func (c Note) ToPdf(noteId, appKey string) revel.Result {
+func (c Note) ToPdf(noteId, appKey string) {
 	// 虽然传了cookie但是这里还是不能得到userId, 所以还是通过appKey来验证之
 	appKeyTrue, _ := revel.Config.String("app.secret")
 	if appKeyTrue != appKey {
@@ -409,7 +409,7 @@ func (c Note) ToPdf(noteId, appKey string) revel.Result {
 }
 
 // 导出成PDF
-func (c Note) ExportPdf(noteId string) revel.Result {
+func (c Note) ExportPdf(noteId string) {
 	re := info.NewRe()
 	userId := c.GetUserId()
 	note := noteService.GetNoteById(noteId)
@@ -506,7 +506,7 @@ func (c Note) ExportPdf(noteId string) revel.Result {
 }
 
 // 设置/取消Blog; 置顶
-func (c Note) SetNote2Blog(noteIds []string, isBlog, isTop bool) revel.Result {
+func (c Note) SetNote2Blog(noteIds []string, isBlog, isTop bool) {
 	for _, noteId := range noteIds {
 		noteService.ToBlog(c.GetUserId(), noteId, isBlog, isTop)
 	}

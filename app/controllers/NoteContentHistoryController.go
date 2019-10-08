@@ -9,7 +9,7 @@ type NoteContentHistory struct {
 }
 
 // 得到list
-func (c NoteContentHistory) ListHistories(noteId string) revel.Result {
+func (c NoteContentHistory) ListHistories(noteId string) {
 	histories := noteContentHistoryService.ListHistories(noteId, c.GetUserId())
 
 	return c.RenderJSON(histories)

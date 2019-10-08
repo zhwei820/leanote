@@ -11,7 +11,7 @@ type Admin struct {
 }
 
 // admin 主页
-func (c Admin) Index() revel.Result {
+func (c Admin) Index() {
 	c.SetUserInfo()
 
 	c.ViewArgs["title"] = "leanote"
@@ -25,7 +25,7 @@ func (c Admin) Index() revel.Result {
 }
 
 // 模板
-func (c Admin) T(t string) revel.Result {
+func (c Admin) T(t string) {
 	c.ViewArgs["str"] = configService.GlobalStringConfigs
 	c.ViewArgs["arr"] = configService.GlobalArrayConfigs
 	c.ViewArgs["map"] = configService.GlobalMapConfigs
@@ -34,6 +34,6 @@ func (c Admin) T(t string) revel.Result {
 	return c.RenderTemplate("admin/" + t + ".html")
 }
 
-func (c Admin) GetView(view string) revel.Result {
+func (c Admin) GetView(view string) {
 	return c.RenderTemplate("admin/" + view)
 }

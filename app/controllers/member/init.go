@@ -72,7 +72,7 @@ func needValidate(controller, method string) bool {
 		return true
 	}
 }
-func AuthInterceptor(c *revel.Controller) revel.Result {
+func AuthInterceptor(c *revel.Controller) {
 	// 全部变成首字大写
 	/*
 		var controller = strings.Title(c.Name)

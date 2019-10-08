@@ -21,7 +21,7 @@ type ApiAuth struct {
 // [ok]
 // 成功返回 {Ok: true, Item: token }
 // 失败返回 {Ok: false, Msg: ""}
-func (c ApiAuth) Login(email, pwd string) revel.Result {
+func (c ApiAuth) Login(email, pwd string) {
 	var msg = ""
 
 	userInfo, err := authService.Login(email, pwd)
@@ -38,7 +38,7 @@ func (c ApiAuth) Login(email, pwd string) revel.Result {
 
 // 注销
 // [Ok]
-func (c ApiAuth) Logout() revel.Result {
+func (c ApiAuth) Logout() {
 	token := c.getToken()
 	sessionService.Clear(token)
 	re := info.NewApiRe()
@@ -49,7 +49,7 @@ func (c ApiAuth) Logout() revel.Result {
 // 注册
 // [Ok]
 // 成功后并不返回用户ID, 需要用户重新登录
-func (c ApiAuth) Register(email, pwd string) revel.Result {
+func (c ApiAuth) Register(email, pwd string) {
 	re := info.NewApiRe()
 	if !configService.IsOpenRegister() {
 		re.Msg = "notOpenRegister" // 未开放注册

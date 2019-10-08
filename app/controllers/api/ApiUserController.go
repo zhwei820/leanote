@@ -12,7 +12,6 @@ import (
 	//	"fmt"
 	//	"math"
 	"os"
-
 	//	"path"
 	//	"strconv"
 )
@@ -23,7 +22,7 @@ type ApiUser struct {
 
 // 获取用户信息
 // [OK]
-func (c ApiUser) Info() revel.Result {
+func (c ApiUser) Info() {
 	re := info.NewApiRe()
 
 	userInfo := c.getUserInfo()
@@ -42,7 +41,7 @@ func (c ApiUser) Info() revel.Result {
 
 // 修改用户名
 // [OK]
-func (c ApiUser) UpdateUsername(username string) revel.Result {
+func (c ApiUser) UpdateUsername(username string) {
 	re := info.NewApiRe()
 	if c.GetUsername() == "demo" {
 		re.Msg = "cannotUpdateDemo"
@@ -59,7 +58,7 @@ func (c ApiUser) UpdateUsername(username string) revel.Result {
 
 // 修改密码
 // [OK]
-func (c ApiUser) UpdatePwd(oldPwd, pwd string) revel.Result {
+func (c ApiUser) UpdatePwd(oldPwd, pwd string) {
 	re := info.NewApiRe()
 	if c.GetUsername() == "demo" {
 		re.Msg = "cannotUpdateDemo"
@@ -77,7 +76,7 @@ func (c ApiUser) UpdatePwd(oldPwd, pwd string) revel.Result {
 
 // 获得同步状态
 // [OK]
-func (c ApiUser) GetSyncState() revel.Result {
+func (c ApiUser) GetSyncState() {
 	ret := bson.M{"LastSyncUsn": userService.GetUsn(c.getUserId()), "LastSyncTime": time.Now().Unix()}
 	return c.RenderJSON(ret)
 }
@@ -86,7 +85,7 @@ func (c ApiUser) GetSyncState() revel.Result {
 // 参数file=文件
 // 成功返回{Logo: url} 头像新url
 // [OK]
-func (c ApiUser) UpdateLogo() revel.Result {
+func (c ApiUser) UpdateLogo() {
 	ok, msg, url := c.uploadImage()
 
 	if ok {

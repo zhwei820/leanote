@@ -55,7 +55,7 @@ func (this *FileService) ListImagesWithPage(userId, albumId, key string, pageNum
 
 	count := db.Count(db.Files, q)
 
-	db.Files.
+	_ = db.Files.
 		Find(q).
 		Sort(sortFieldR).
 		Skip(skipNum).

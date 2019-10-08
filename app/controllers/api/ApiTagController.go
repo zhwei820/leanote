@@ -18,7 +18,7 @@ type ApiTag struct {
 // [OK]
 // > afterUsn的笔记
 // 返回 {ChunkHighUsn: 本下最大的usn, 借此可以知道是否还有, Notebooks: []}
-func (c ApiTag) GetSyncTags(afterUsn, maxEntry int) revel.Result {
+func (c ApiTag) GetSyncTags(afterUsn, maxEntry int) {
 	if maxEntry == 0 {
 		maxEntry = 100
 	}
@@ -42,14 +42,14 @@ func (c ApiTag) GetSyncTags(afterUsn, maxEntry int) revel.Result {
   "IsDeleted": false
 }
 */
-func (c ApiTag) AddTag(tag string) revel.Result {
+func (c ApiTag) AddTag(tag string) {
 	ret := tagService.AddOrUpdateTag(c.getUserId(), tag)
 	return c.RenderJSON(ret)
 }
 
 // 删除标签
 // [OK]
-func (c ApiTag) DeleteTag(tag string, usn int) revel.Result {
+func (c ApiTag) DeleteTag(tag string, usn int) {
 	re := info.NewReUpdate()
 	re.Ok, re.Msg, re.Usn = tagService.DeleteTagApi(c.getUserId(), tag, usn)
 	return c.RenderJSON(re)

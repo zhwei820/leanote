@@ -13,7 +13,7 @@ type AdminBlog struct {
 }
 
 // admin 主页
-func (c AdminBlog) Index(sorter, keywords string) revel.Result {
+func (c AdminBlog) Index(sorter, keywords string) {
 	pageNumber := c.GetPage()
 	sorterField, isAsc := c.getSorter("CreatedTime", false, []string{"title", "userId", "isRecommed", "createdTime"})
 	pageInfo, blogs := blogService.ListAllBlogs("", "", keywords, false, pageNumber, userPageSize, sorterField, isAsc)
@@ -23,7 +23,7 @@ func (c AdminBlog) Index(sorter, keywords string) revel.Result {
 	return c.RenderTemplate("admin/blog/list.html")
 }
 
-func (c AdminBlog) SetRecommend(noteId string, recommend bool) revel.Result {
+func (c AdminBlog) SetRecommend(noteId string, recommend bool) {
 	re := info.NewRe()
 	re.Ok = blogService.SetRecommend(noteId, recommend)
 	return c.RenderJSON(re)

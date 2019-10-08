@@ -17,7 +17,7 @@ type AdminData struct {
 	AdminBaseController
 }
 
-func (c AdminData) Index() revel.Result {
+func (c AdminData) Index() {
 	backups := configService.GetGlobalArrMapConfig("backups")
 	// 逆序之
 	backups2 := make([]map[string]string, len(backups))
@@ -30,31 +30,31 @@ func (c AdminData) Index() revel.Result {
 	return c.RenderTemplate("admin/data/index.html")
 }
 
-func (c AdminData) Backup() revel.Result {
+func (c AdminData) Backup() {
 	re := info.NewRe()
 	re.Ok, re.Msg = configService.Backup("")
 	return c.RenderJSON(re)
 }
 
 // 还原
-func (c AdminData) Restore(createdTime string) revel.Result {
+func (c AdminData) Restore(createdTime string) {
 	re := info.Re{}
 	re.Ok, re.Msg = configService.Restore(createdTime)
 	return c.RenderJSON(re)
 }
 
-func (c AdminData) Delete(createdTime string) revel.Result {
+func (c AdminData) Delete(createdTime string) {
 	re := info.Re{}
 	re.Ok, re.Msg = configService.DeleteBackup(createdTime)
 	return c.RenderJSON(re)
 }
-func (c AdminData) UpdateRemark(createdTime, remark string) revel.Result {
+func (c AdminData) UpdateRemark(createdTime, remark string) {
 	re := info.Re{}
 	re.Ok, re.Msg = configService.UpdateBackupRemark(createdTime, remark)
 
 	return c.RenderJSON(re)
 }
-func (c AdminData) Download(createdTime string) revel.Result {
+func (c AdminData) Download(createdTime string) {
 	backup, ok := configService.GetBackup(createdTime)
 	if !ok {
 		return c.RenderText("")

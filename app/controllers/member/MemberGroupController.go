@@ -11,7 +11,7 @@ type MemberGroup struct {
 }
 
 // 首页, 显示所有分组和用户
-func (c MemberGroup) Index() revel.Result {
+func (c MemberGroup) Index() {
 	c.SetUserInfo()
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("My Group")
@@ -20,26 +20,26 @@ func (c MemberGroup) Index() revel.Result {
 }
 
 // 添加分组
-func (c MemberGroup) AddGroup(title string) revel.Result {
+func (c MemberGroup) AddGroup(title string) {
 	re := info.NewRe()
 	re.Ok, re.Item = groupService.AddGroup(c.GetUserId(), title)
 	return c.RenderJSON(re)
 }
 
-func (c MemberGroup) UpdateGroupTitle(groupId, title string) revel.Result {
+func (c MemberGroup) UpdateGroupTitle(groupId, title string) {
 	re := info.NewRe()
 	re.Ok = groupService.UpdateGroupTitle(c.GetUserId(), groupId, title)
 	return c.RenderJSON(re)
 }
 
-func (c MemberGroup) DeleteGroup(groupId string) revel.Result {
+func (c MemberGroup) DeleteGroup(groupId string) {
 	re := info.NewRe()
 	re.Ok, re.Msg = groupService.DeleteGroup(c.GetUserId(), groupId)
 	return c.RenderRe(re)
 }
 
 // 添加用户
-func (c MemberGroup) AddUser(groupId, email string) revel.Result {
+func (c MemberGroup) AddUser(groupId, email string) {
 	re := info.NewRe()
 	userInfo := userService.GetUserInfoByAny(email)
 	if userInfo.UserId == "" {
@@ -51,7 +51,7 @@ func (c MemberGroup) AddUser(groupId, email string) revel.Result {
 	return c.RenderRe(re)
 }
 
-func (c MemberGroup) DeleteUser(groupId, userId string) revel.Result {
+func (c MemberGroup) DeleteUser(groupId, userId string) {
 	re := info.NewRe()
 	re.Ok, re.Msg = groupService.DeleteUser(c.GetUserId(), groupId, userId)
 	return c.RenderRe(re)

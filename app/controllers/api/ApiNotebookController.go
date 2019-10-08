@@ -48,7 +48,7 @@ func (c ApiNotebook) fixNotebook(notebook *info.Notebook) info.ApiNotebook {
 // [OK]
 // > afterUsn的笔记
 // 返回 {ChunkHighUsn: 本下最大的usn, 借此可以知道是否还有, Notebooks: []}
-func (c ApiNotebook) GetSyncNotebooks(afterUsn, maxEntry int) revel.Result {
+func (c ApiNotebook) GetSyncNotebooks(afterUsn, maxEntry int) {
 	if maxEntry == 0 {
 		maxEntry = 100
 	}
@@ -59,14 +59,14 @@ func (c ApiNotebook) GetSyncNotebooks(afterUsn, maxEntry int) revel.Result {
 // 得到用户的所有笔记本
 // [OK]
 // info.SubNotebooks
-func (c ApiNotebook) GetNotebooks() revel.Result {
+func (c ApiNotebook) GetNotebooks() {
 	notebooks := notebookService.GeSyncNotebooks(c.getUserId(), 0, 99999)
 	return c.RenderJSON(c.fixNotebooks(notebooks))
 }
 
 // 添加notebook
 // [OK]
-func (c ApiNotebook) AddNotebook(title, parentNotebookId string, seq int) revel.Result {
+func (c ApiNotebook) AddNotebook(title, parentNotebookId string, seq int) {
 	notebook := info.Notebook{NotebookId: bson.NewObjectId(),
 		Title:  title,
 		Seq:    seq,
@@ -84,7 +84,7 @@ func (c ApiNotebook) AddNotebook(title, parentNotebookId string, seq int) revel.
 
 // 修改笔记
 // [OK]
-func (c ApiNotebook) UpdateNotebook(notebookId, title, parentNotebookId string, seq, usn int) revel.Result {
+func (c ApiNotebook) UpdateNotebook(notebookId, title, parentNotebookId string, seq, usn int) {
 	re := info.NewApiRe()
 
 	ok, msg, notebook := notebookService.UpdateNotebookApi(c.getUserId(), notebookId, title, parentNotebookId, seq, usn)
@@ -99,7 +99,7 @@ func (c ApiNotebook) UpdateNotebook(notebookId, title, parentNotebookId string, 
 
 // 删除笔记本
 // [OK]
-func (c ApiNotebook) DeleteNotebook(notebookId string, usn int) revel.Result {
+func (c ApiNotebook) DeleteNotebook(notebookId string, usn int) {
 	re := info.NewApiRe()
 	re.Ok, re.Msg = notebookService.DeleteNotebookForce(c.getUserId(), notebookId, usn)
 	return c.RenderJSON(re)

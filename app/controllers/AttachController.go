@@ -22,7 +22,7 @@ type Attach struct {
 }
 
 // 上传附件
-func (c Attach) UploadAttach(noteId string) revel.Result {
+func (c Attach) UploadAttach(noteId string) {
 	re := c.uploadAttach(noteId)
 	return c.RenderJSON(re)
 }
@@ -121,14 +121,14 @@ func (c Attach) uploadAttach(noteId string) (re info.Re) {
 }
 
 // 删除附件
-func (c Attach) DeleteAttach(attachId string) revel.Result {
+func (c Attach) DeleteAttach(attachId string) {
 	re := info.NewRe()
 	re.Ok, re.Msg = attachService.DeleteAttach(attachId, c.GetUserId())
 	return c.RenderJSON(re)
 }
 
 // get all attachs by noteId
-func (c Attach) GetAttachs(noteId string) revel.Result {
+func (c Attach) GetAttachs(noteId string) {
 	re := info.NewRe()
 	re.Ok = true
 	re.List = attachService.ListAttachs(noteId, c.GetUserId())
@@ -137,7 +137,7 @@ func (c Attach) GetAttachs(noteId string) revel.Result {
 
 // 下载附件
 // 权限判断
-func (c Attach) Download(attachId string) revel.Result {
+func (c Attach) Download(attachId string) {
 	attach := attachService.GetAttach(attachId, c.GetUserId()) // 得到路径
 	path := attach.Path
 	if path == "" {
@@ -149,7 +149,7 @@ func (c Attach) Download(attachId string) revel.Result {
 	// return c.RenderFile(file, revel.Attachment) // revel.Attachment
 }
 
-func (c Attach) DownloadAll(noteId string) revel.Result {
+func (c Attach) DownloadAll(noteId string) {
 	note := noteService.GetNoteById(noteId)
 	if note.NoteId == "" {
 		return c.RenderText("")

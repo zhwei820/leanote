@@ -16,7 +16,7 @@ type Auth struct {
 
 //--------
 // 登录
-func (c Auth) Login(email, from string) revel.Result {
+func (c Auth) Login(email, from string) {
 	c.ViewArgs["title"] = c.Message("login")
 	c.ViewArgs["subTitle"] = c.Message("login")
 	c.ViewArgs["email"] = email
@@ -38,7 +38,7 @@ func (c Auth) Login(email, from string) revel.Result {
 }
 
 // 为了demo和register
-func (c Auth) doLogin(email, pwd string) revel.Result {
+func (c Auth) doLogin(email, pwd string) {
 	sessionId := c.Session.ID()
 	var msg = ""
 
@@ -54,7 +54,7 @@ func (c Auth) doLogin(email, pwd string) revel.Result {
 
 	return c.RenderJSON(info.Re{Ok: false, Item: sessionService.LoginTimesIsOver(sessionId), Msg: c.Message(msg)})
 }
-func (c Auth) DoLogin(email, pwd string, captcha string) revel.Result {
+func (c Auth) DoLogin(email, pwd string, captcha string) {
 	sessionId := c.Session.ID()
 	var msg = ""
 
@@ -78,7 +78,7 @@ func (c Auth) DoLogin(email, pwd string, captcha string) revel.Result {
 }
 
 // 注销
-func (c Auth) Logout() revel.Result {
+func (c Auth) Logout() {
 	sessionId := c.Session.ID()
 	sessionService.Clear(sessionId)
 	c.ClearSession()
@@ -86,7 +86,7 @@ func (c Auth) Logout() revel.Result {
 }
 
 // 体验一下
-func (c Auth) Demo() revel.Result {
+func (c Auth) Demo() {
 	email := configService.GetGlobalStringConfig("demoUsername")
 	pwd := configService.GetGlobalStringConfig("demoPassword")
 
@@ -102,7 +102,7 @@ func (c Auth) Demo() revel.Result {
 
 //--------
 // 注册
-func (c Auth) Register(from, iu string) revel.Result {
+func (c Auth) Register(from, iu string) {
 	if !configService.IsOpenRegister() {
 		return c.Redirect("/index")
 	}
@@ -114,7 +114,7 @@ func (c Auth) Register(from, iu string) revel.Result {
 	c.ViewArgs["subTitle"] = c.Message("register")
 	return c.RenderTemplate("home/register.html")
 }
-func (c Auth) DoRegister(email, pwd, iu string) revel.Result {
+func (c Auth) DoRegister(email, pwd, iu string) {
 	if !configService.IsOpenRegister() {
 		return c.Redirect("/index")
 	}
@@ -143,13 +143,13 @@ func (c Auth) DoRegister(email, pwd, iu string) revel.Result {
 
 //--------
 // 找回密码
-func (c Auth) FindPassword() revel.Result {
+func (c Auth) FindPassword() {
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("findPassword")
 	c.ViewArgs["subTitle"] = c.Message("findPassword")
 	return c.RenderTemplate("home/find_password.html")
 }
-func (c Auth) DoFindPassword(email string) revel.Result {
+func (c Auth) DoFindPassword(email string) {
 	pwdService.FindPwd(email)
 	re := info.NewRe()
 	re.Ok = true
@@ -157,7 +157,7 @@ func (c Auth) DoFindPassword(email string) revel.Result {
 }
 
 // 点击链接后, 先验证之
-func (c Auth) FindPassword2(token string) revel.Result {
+func (c Auth) FindPassword2(token string) {
 	c.SetLocale()
 	c.ViewArgs["title"] = c.Message("findPassword")
 	c.ViewArgs["subTitle"] = c.Message("findPassword")
@@ -177,7 +177,7 @@ func (c Auth) FindPassword2(token string) revel.Result {
 }
 
 // 找回密码修改密码
-func (c Auth) FindPasswordUpdate(token, pwd string) revel.Result {
+func (c Auth) FindPasswordUpdate(token, pwd string) {
 	re := info.NewRe()
 
 	if re.Ok, re.Msg = Vd("password", pwd); !re.Ok {

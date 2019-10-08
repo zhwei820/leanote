@@ -19,7 +19,7 @@ type User struct {
 	BaseController
 }
 
-func (c User) Account(tab int) revel.Result {
+func (c User) Account(tab int) {
 	userInfo := c.GetUserInfo()
 	c.ViewArgs["userInfo"] = userInfo
 	c.ViewArgs["tab"] = tab
@@ -28,7 +28,7 @@ func (c User) Account(tab int) revel.Result {
 }
 
 // 修改用户名, 需要重置session
-func (c User) UpdateUsername(username string) revel.Result {
+func (c User) UpdateUsername(username string) {
 	re := info.NewRe()
 	if c.GetUserId() == configService.GetGlobalStringConfig("demoUserId") {
 		re.Msg = "cannotUpdateDemo"
@@ -47,7 +47,7 @@ func (c User) UpdateUsername(username string) revel.Result {
 }
 
 // 修改密码
-func (c User) UpdatePwd(oldPwd, pwd string) revel.Result {
+func (c User) UpdatePwd(oldPwd, pwd string) {
 	re := info.NewRe()
 	if c.GetUserId() == configService.GetGlobalStringConfig("demoUserId") {
 		re.Msg = "cannotUpdateDemo"
@@ -64,7 +64,7 @@ func (c User) UpdatePwd(oldPwd, pwd string) revel.Result {
 }
 
 // 更新主题
-func (c User) UpdateTheme(theme string) revel.Result {
+func (c User) UpdateTheme(theme string) {
 	re := info.NewRe()
 	re.Ok = userService.UpdateTheme(c.GetUserId(), theme)
 	if re.Ok {
@@ -74,7 +74,7 @@ func (c User) UpdateTheme(theme string) revel.Result {
 }
 
 // 发送邀请链接
-func (c User) SendRegisterEmail(content, toEmail string) revel.Result {
+func (c User) SendRegisterEmail(content, toEmail string) {
 	re := info.NewRe()
 	if content == "" || !IsEmail(toEmail) {
 		return c.RenderJSON(re)
@@ -87,7 +87,7 @@ func (c User) SendRegisterEmail(content, toEmail string) revel.Result {
 //---------------------------
 
 // 重新发送激活邮件
-func (c User) ReSendActiveEmail() revel.Result {
+func (c User) ReSendActiveEmail() {
 	re := info.NewRe()
 	re.Ok = emailService.RegisterSendActiveEmail(c.GetUserInfo(), c.GetEmail())
 	return c.RenderJSON(re)
@@ -95,7 +95,7 @@ func (c User) ReSendActiveEmail() revel.Result {
 
 // 通过点击链接
 // 修改邮箱
-func (c User) UpdateEmail(token string) revel.Result {
+func (c User) UpdateEmail(token string) {
 	c.SetUserInfo()
 
 	ok, msg, email := userService.UpdateEmail(token)
@@ -114,7 +114,7 @@ func (c User) UpdateEmail(token string) revel.Result {
 }
 
 // 注册后激活邮箱
-func (c User) ActiveEmail(token string) revel.Result {
+func (c User) ActiveEmail(token string) {
 	c.SetUserInfo()
 
 	ok, msg, email := userService.ActiveEmail(token)
@@ -134,7 +134,7 @@ func (c User) ActiveEmail(token string) revel.Result {
 
 //-----------------
 // 用户偏爱
-func (c User) UpdateColumnWidth(notebookWidth, noteListWidth, mdEditorWidth int) revel.Result {
+func (c User) UpdateColumnWidth(notebookWidth, noteListWidth, mdEditorWidth int) {
 	re := info.NewRe()
 	re.Ok = userService.UpdateColumnWidth(c.GetUserId(), notebookWidth, noteListWidth, mdEditorWidth)
 	if re.Ok {
@@ -146,7 +146,7 @@ func (c User) UpdateColumnWidth(notebookWidth, noteListWidth, mdEditorWidth int)
 	}
 	return c.RenderJSON(re)
 }
-func (c User) UpdateLeftIsMin(leftIsMin bool) revel.Result {
+func (c User) UpdateLeftIsMin(leftIsMin bool) {
 	re := info.NewRe()
 	re.Ok = userService.UpdateLeftIsMin(c.GetUserId(), leftIsMin)
 	if re.Ok {

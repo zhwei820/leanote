@@ -47,7 +47,7 @@ $.bootstrapCssUrl
 $.bootstrapJsUrl
 */
 
-func (c Blog) render(templateName string, themePath string) revel.Result {
+func (c Blog) render(templateName string, themePath string) {
 	isPreview := false
 	if c.ViewArgs["isPreview"] != nil {
 		themePath2 := c.ViewArgs["themePath"]
@@ -65,7 +65,7 @@ func (c Blog) render(templateName string, themePath string) revel.Result {
 }
 
 // 404
-func (c Blog) e404(themePath string) revel.Result {
+func (c Blog) e404(themePath string) {
 	// 不知道是谁的404, 则用系统的404
 	if themePath == "" {
 		return c.E404()
@@ -357,7 +357,7 @@ func (c Blog) blogCommon(userId string, userBlog info.UserBlog, userInfo info.Us
 }
 
 // 404
-func (c Blog) E(userIdOrEmail, tag string) revel.Result {
+func (c Blog) E(userIdOrEmail, tag string) {
 	ok, userBlog := c.domain()
 	var userId string
 	if ok {
@@ -376,7 +376,7 @@ func (c Blog) E(userIdOrEmail, tag string) revel.Result {
 	return c.e404(userBlog.ThemePath)
 }
 
-func (c Blog) Tags(userIdOrEmail string) (re revel.Result) {
+func (c Blog) Tags(userIdOrEmail string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -411,7 +411,7 @@ func (c Blog) Tags(userIdOrEmail string) (re revel.Result) {
 }
 
 // 标签的文章页
-func (c Blog) Tag(userIdOrEmail, tag string) (re revel.Result) {
+func (c Blog) Tag(userIdOrEmail, tag string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -457,7 +457,7 @@ func (c Blog) Tag(userIdOrEmail, tag string) (re revel.Result) {
 }
 
 // 归档
-func (c Blog) Archives(userIdOrEmail string, cateId string, year, month int) (re revel.Result) {
+func (c Blog) Archives(userIdOrEmail string, cateId string, year, month int) re {
 	notebookId := cateId
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
@@ -509,7 +509,7 @@ var blogPageSize = 5
 var searchBlogPageSize = 30
 
 // 分类 /cate/xxxxxxxx?notebookId=1212
-func (c Blog) Cate(userIdOrEmail string, notebookId string) (re revel.Result) {
+func (c Blog) Cate(userIdOrEmail string, notebookId string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -572,7 +572,7 @@ func (c Blog) userIdOrEmail(hasDomain bool, userBlog info.UserBlog, userIdOrEmai
 	return
 }
 
-func (c Blog) Index(userIdOrEmail string) (re revel.Result) {
+func (c Blog) Index(userIdOrEmail string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -604,7 +604,7 @@ func (c Blog) Index(userIdOrEmail string) (re revel.Result) {
 	return c.render("index.html", userBlog.ThemePath)
 }
 
-func (c Blog) Post(userIdOrEmail, noteId string) (re revel.Result) {
+func (c Blog) Post(userIdOrEmail, noteId string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -657,7 +657,7 @@ func (c Blog) Post(userIdOrEmail, noteId string) (re revel.Result) {
 	return c.render("post.html", userBlog.ThemePath)
 }
 
-func (c Blog) Single(userIdOrEmail, singleId string) (re revel.Result) {
+func (c Blog) Single(userIdOrEmail, singleId string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -697,7 +697,7 @@ func (c Blog) Single(userIdOrEmail, singleId string) (re revel.Result) {
 }
 
 // 搜索
-func (c Blog) Search(userIdOrEmail, keywords string) (re revel.Result) {
+func (c Blog) Search(userIdOrEmail, keywords string) re {
 	// 自定义域名
 	hasDomain, userBlog := c.domain()
 	defer func() {
@@ -748,7 +748,7 @@ func (c Blog) setRenderUserInfo(userInfo info.User) {
 // 社交, 点赞, 评论
 
 // 得到博客统计信息
-func (c Blog) GetPostStat(noteId string) revel.Result {
+func (c Blog) GetPostStat(noteId string) {
 	re := info.NewRe()
 	re.Ok = true
 	statInfo := blogService.GetBlogStat(noteId)
@@ -760,7 +760,7 @@ func (c Blog) GetPostStat(noteId string) revel.Result {
 // 我是否点过赞? 得到我的信息
 // 所有点赞的用户列表
 // 各个评论中是否我也点过赞?
-func (c Blog) GetLikes(noteId string, callback string) revel.Result {
+func (c Blog) GetLikes(noteId string, callback string) {
 	userId := c.GetUserId()
 	result := map[string]interface{}{}
 	isILikeIt := false
@@ -780,7 +780,7 @@ func (c Blog) GetLikes(noteId string, callback string) revel.Result {
 	re.Item = result
 	return c.RenderJSONP(callback, re)
 }
-func (c Blog) GetLikesAndComments(noteId, callback string) revel.Result {
+func (c Blog) GetLikesAndComments(noteId, callback string) {
 	userId := c.GetUserId()
 	result := map[string]interface{}{}
 
@@ -809,20 +809,20 @@ func (c Blog) GetLikesAndComments(noteId, callback string) revel.Result {
 	return c.RenderJSONP(callback, re)
 }
 
-func (c Blog) IncReadNum(noteId string) revel.Result {
+func (c Blog) IncReadNum(noteId string) {
 	re := info.NewRe()
 	re.Ok = blogService.IncReadNum(noteId)
 	return c.RenderJSON(re)
 }
 
 // 点赞, 要用jsonp
-func (c Blog) LikePost(noteId string, callback string) revel.Result {
+func (c Blog) LikePost(noteId string, callback string) {
 	re := info.NewRe()
 	userId := c.GetUserId()
 	re.Ok, re.Item = blogService.LikeBlog(noteId, userId)
 	return c.RenderJSONP(callback, re)
 }
-func (c Blog) GetComments(noteId string, callback string) revel.Result {
+func (c Blog) GetComments(noteId string, callback string) {
 	// 评论
 	userId := c.GetUserId()
 	page := c.GetPage()
@@ -843,21 +843,21 @@ func (c Blog) GetComments(noteId string, callback string) revel.Result {
 }
 
 // jsonp
-func (c Blog) DeleteComment(noteId, commentId string, callback string) revel.Result {
+func (c Blog) DeleteComment(noteId, commentId string, callback string) {
 	re := info.NewRe()
 	re.Ok = blogService.DeleteComment(noteId, commentId, c.GetUserId())
 	return c.RenderJSONP(callback, re)
 }
 
 // jsonp
-func (c Blog) CommentPost(noteId, content, toCommentId string, callback string) revel.Result {
+func (c Blog) CommentPost(noteId, content, toCommentId string, callback string) {
 	re := info.NewRe()
 	re.Ok, re.Item = blogService.Comment(noteId, toCommentId, c.GetUserId(), content)
 	return c.RenderJSONP(callback, re)
 }
 
 // jsonp
-func (c Blog) LikeComment(commentId string, callback string) revel.Result {
+func (c Blog) LikeComment(commentId string, callback string) {
 	re := info.NewRe()
 	ok, isILikeIt, num := blogService.LikeComment(commentId, c.GetUserId())
 	re.Ok = ok
@@ -866,7 +866,7 @@ func (c Blog) LikeComment(commentId string, callback string) revel.Result {
 }
 
 // 显示分类的最近博客, jsonp
-func (c Blog) ListCateLatest(notebookId, callback string) revel.Result {
+func (c Blog) ListCateLatest(notebookId, callback string) {
 	if notebookId == "" {
 		return c.e404("")
 	}

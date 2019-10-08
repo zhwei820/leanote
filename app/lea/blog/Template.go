@@ -39,7 +39,7 @@ var CloneTemplate *template.Template
 type RenderTemplateResult struct {
 	Template    *template.Template
 	PathContent map[string]string
-	ViewArgs map[string]interface{}
+	ViewArgs    map[string]interface{}
 
 	IsPreview  bool // 是否是预览
 	CurBlogTpl *BlogTpl
@@ -151,7 +151,7 @@ func Init() {
 // basePath 表未用户主题的基路径, 如/xxx/public/upload/32323232/themes/theme1, 如果没有, 则表示用自带的
 // isPreview 如果是, 错误提示则显示系统的 500 错误详情信息, 供debug
 //
-func RenderTemplate(name string, args map[string]interface{}, basePath string, isPreview bool) revel.Result {
+func RenderTemplate(name string, args map[string]interface{}, basePath string, isPreview bool) {
 	var r *RenderTemplateResult
 	// 传来的主题路径为空, 则用系统的
 	// 都不会为空的
@@ -162,7 +162,7 @@ func RenderTemplate(name string, args map[string]interface{}, basePath string, i
 		r = &RenderTemplateResult{
 			Template:    t,
 			PathContent: BlogTplObject.PathContent, // 为了显示错误
-			ViewArgs:  args,                      // 把args给它
+			ViewArgs:    args,                      // 把args给它
 		}
 	} else {
 		// 复制一份
@@ -202,7 +202,7 @@ func RenderTemplate(name string, args map[string]interface{}, basePath string, i
 		r = &RenderTemplateResult{
 			Template:    t,
 			PathContent: newBlogTplObject.PathContent, // 为了显示错误
-			ViewArgs:  args,
+			ViewArgs:    args,
 			CurBlogTpl:  newBlogTplObject,
 			IsPreview:   isPreview,
 		}
@@ -215,7 +215,7 @@ func RenderTemplate(name string, args map[string]interface{}, basePath string, i
 //
 
 type ErrorResult struct {
-	ViewArgs map[string]interface{}
+	ViewArgs   map[string]interface{}
 	Error      error
 	IsPreview  bool
 	CurBlogTpl *BlogTpl

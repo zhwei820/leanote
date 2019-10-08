@@ -9,8 +9,8 @@ import (
 	"os"
 	"os/exec"
 	// "strings"
-	"time"
 	"regexp"
+	"time"
 	//	"github.com/leanote/leanote/app/types"
 	//	"io/ioutil"
 	//	"fmt"
@@ -47,7 +47,7 @@ type ApiNote struct {
     "PublicTime": "2015-03-30T22:37:21.695+08:00"
   }
 */
-func (c ApiNote) GetSyncNotes(afterUsn, maxEntry int) revel.Result {
+func (c ApiNote) GetSyncNotes(afterUsn, maxEntry int) {
 	if maxEntry == 0 {
 		maxEntry = 100
 	}
@@ -57,7 +57,7 @@ func (c ApiNote) GetSyncNotes(afterUsn, maxEntry int) revel.Result {
 
 // 得到笔记本下的笔记
 // [OK]
-func (c ApiNote) GetNotes(notebookId string) revel.Result {
+func (c ApiNote) GetNotes(notebookId string) {
 	if notebookId != "" && !bson.IsObjectIdHex(notebookId) {
 		re := info.NewApiRe()
 		re.Msg = "notebookIdInvalid"
@@ -69,7 +69,7 @@ func (c ApiNote) GetNotes(notebookId string) revel.Result {
 
 // 得到trash
 // [OK]
-func (c ApiNote) GetTrashNotes() revel.Result {
+func (c ApiNote) GetTrashNotes() {
 	_, notes := noteService.ListNotes(c.getUserId(), "", true, c.GetPage(), pageSize, defaultSortField, false, false)
 	return c.RenderJSON(noteService.ToApiNotes(notes))
 
@@ -123,7 +123,7 @@ func (c ApiNote) GetTrashNotes() revel.Result {
   "PublicTime": "2015-03-20T20:00:52.463+08:00"
 }
 */
-func (c ApiNote) GetNote(noteId string) revel.Result {
+func (c ApiNote) GetNote(noteId string) {
 	if !bson.IsObjectIdHex(noteId) {
 		re := info.NewApiRe()
 		re.Msg = "noteIdInvalid"
@@ -142,7 +142,7 @@ func (c ApiNote) GetNote(noteId string) revel.Result {
 
 // 得到note和内容
 // [OK]
-func (c ApiNote) GetNoteAndContent(noteId string) revel.Result {
+func (c ApiNote) GetNoteAndContent(noteId string) {
 	noteAndContent := noteService.GetNoteAndContent(noteId, c.getUserId())
 
 	apiNotes := noteService.ToApiNotes([]info.Note{noteAndContent.Note})
@@ -168,22 +168,22 @@ func (c ApiNote) fixPostNotecontent(noteOrContent *info.ApiNote) {
 				if !file.IsAttach {
 					// <img src="https://"
 					// ![](http://demo.leanote.top/api/file/getImage?fileId=5863219465b68e4fd5000001)
-					reg, _ := regexp.Compile(`https*://[^/]*?/api/file/getImage\?fileId=`+file.LocalFileId)
+					reg, _ := regexp.Compile(`https*://[^/]*?/api/file/getImage\?fileId=` + file.LocalFileId)
 					// Log(reg)
-					noteOrContent.Content = reg.ReplaceAllString(noteOrContent.Content, `/api/file/getImage?fileId=`+file.FileId)  
+					noteOrContent.Content = reg.ReplaceAllString(noteOrContent.Content, `/api/file/getImage?fileId=`+file.FileId)
 
 					// // "http://a.com/api/file/getImage?fileId=localId" => /api/file/getImage?fileId=serverId
-					// noteOrContent.Content = strings.Replace(noteOrContent.Content, 
-					// 	baseUrl + "/api/file/getImage?fileId="+file.LocalFileId, 
+					// noteOrContent.Content = strings.Replace(noteOrContent.Content,
+					// 	baseUrl + "/api/file/getImage?fileId="+file.LocalFileId,
 					// 	"/api/file/getImage?fileId="+file.FileId, -1)
 				} else {
-					reg, _ := regexp.Compile(`https*://[^/]*?/api/file/getAttach\?fileId=`+file.LocalFileId)
+					reg, _ := regexp.Compile(`https*://[^/]*?/api/file/getAttach\?fileId=` + file.LocalFileId)
 					// Log(reg)
-					noteOrContent.Content = reg.ReplaceAllString(noteOrContent.Content, `/api/file/getAttach?fileId=`+file.FileId)  
+					noteOrContent.Content = reg.ReplaceAllString(noteOrContent.Content, `/api/file/getAttach?fileId=`+file.FileId)
 					/*
-					noteOrContent.Content = strings.Replace(noteOrContent.Content, 
-						baseUrl + "/api/file/getAttach?fileId="+file.LocalFileId, 
-						"/api/file/getAttach?fileId="+file.FileId, -1)
+						noteOrContent.Content = strings.Replace(noteOrContent.Content,
+							baseUrl + "/api/file/getAttach?fileId="+file.LocalFileId,
+							"/api/file/getAttach?fileId="+file.FileId, -1)
 					*/
 				}
 			}
@@ -192,7 +192,7 @@ func (c ApiNote) fixPostNotecontent(noteOrContent *info.ApiNote) {
 }
 
 // 得到内容
-func (c ApiNote) GetNoteContent(noteId string) revel.Result {
+func (c ApiNote) GetNoteContent(noteId string) {
 	userId := c.getUserId()
 	note := noteService.GetNote(noteId, userId)
 	//	re := info.NewRe()
@@ -212,7 +212,7 @@ func (c ApiNote) GetNoteContent(noteId string) revel.Result {
 
 // 添加笔记
 // [OK]
-func (c ApiNote) AddNote(noteOrContent info.ApiNote) revel.Result {
+func (c ApiNote) AddNote(noteOrContent info.ApiNote) {
 	userId := bson.ObjectIdHex(c.getUserId())
 	re := info.NewRe()
 	myUserId := userId
@@ -337,7 +337,7 @@ func (c ApiNote) AddNote(noteOrContent info.ApiNote) revel.Result {
 
 // 更新笔记
 // [OK]
-func (c ApiNote) UpdateNote(noteOrContent info.ApiNote) revel.Result {
+func (c ApiNote) UpdateNote(noteOrContent info.ApiNote) {
 	re := info.NewReUpdate()
 
 	noteUpdate := bson.M{}
@@ -543,7 +543,7 @@ func (c ApiNote) UpdateNote(noteOrContent info.ApiNote) revel.Result {
 }
 
 // 删除trash
-func (c ApiNote) DeleteTrash(noteId string, usn int) revel.Result {
+func (c ApiNote) DeleteTrash(noteId string, usn int) {
 	re := info.NewReUpdate()
 	re.Ok, re.Msg, re.Usn = trashService.DeleteTrashApi(noteId, c.getUserId(), usn)
 	return c.RenderJSON(re)
@@ -551,7 +551,7 @@ func (c ApiNote) DeleteTrash(noteId string, usn int) revel.Result {
 
 // 得到历史列表
 /*
-func (c ApiNote) GetHistories(noteId string) revel.Result {
+func (c ApiNote) GetHistories(noteId string)  {
 	re := info.NewRe()
 	histories := noteContentHistoryService.ListHistories(noteId, c.getUserId())
 	if len(histories) > 0 {
@@ -564,7 +564,7 @@ func (c ApiNote) GetHistories(noteId string) revel.Result {
 
 // 0.2 新增
 // 导出成PDF
-func (c ApiNote) ExportPdf(noteId string) revel.Result {
+func (c ApiNote) ExportPdf(noteId string) {
 	re := info.NewApiRe()
 	userId := c.getUserId()
 	if noteId == "" {

@@ -16,7 +16,7 @@ type AdminUser struct {
 // admin 主页
 var userPageSize = 10
 
-func (c AdminUser) Index(sorter, keywords string, pageSize int) revel.Result {
+func (c AdminUser) Index(sorter, keywords string, pageSize int) {
 	pageNumber := c.GetPage()
 	if pageSize == 0 {
 		pageSize = userPageSize
@@ -29,12 +29,12 @@ func (c AdminUser) Index(sorter, keywords string, pageSize int) revel.Result {
 	return c.RenderTemplate("admin/user/list.html")
 }
 
-func (c AdminUser) Add() revel.Result {
+func (c AdminUser) Add() {
 	return c.RenderTemplate("admin/user/add.html")
 }
 
 // 添加
-func (c AdminUser) Register(email, pwd string) revel.Result {
+func (c AdminUser) Register(email, pwd string) {
 	re := info.NewRe()
 
 	if re.Ok, re.Msg = Vd("email", email); !re.Ok {
@@ -51,13 +51,13 @@ func (c AdminUser) Register(email, pwd string) revel.Result {
 }
 
 // 修改帐户
-func (c AdminUser) ResetPwd(userId string) revel.Result {
+func (c AdminUser) ResetPwd(userId string) {
 	userInfo := userService.GetUserInfo(userId)
 	c.ViewArgs["userInfo"] = userInfo
 	return c.RenderTemplate("admin/user/reset_pwd.html")
 }
 
-func (c AdminUser) DoResetPwd(userId, pwd string) revel.Result {
+func (c AdminUser) DoResetPwd(userId, pwd string) {
 	re := info.NewRe()
 	if re.Ok, re.Msg = Vd("password", pwd); !re.Ok {
 		return c.RenderRe(re)
